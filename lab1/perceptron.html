@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.340">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>哈尔滨工业大学（深圳）《统计机器学习》2023 春 实验一</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="perceptron_files/libs/clipboard/clipboard.min.js"></script>
+<script src="perceptron_files/libs/quarto-html/quarto.js"></script>
+<script src="perceptron_files/libs/quarto-html/popper.min.js"></script>
+<script src="perceptron_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="perceptron_files/libs/quarto-html/anchor.min.js"></script>
+<link href="perceptron_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="perceptron_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="perceptron_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="perceptron_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="perceptron_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">哈尔滨工业大学（深圳）《统计机器学习》2023 春 实验一</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<table class="table">
+<thead>
+<tr class="header">
+<th>学号</th>
+<th>姓名</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>210810311</td>
+<td>秦泽钊</td>
+</tr>
+</tbody>
+</table>
+<p>运行截图用 Notebook PDF 输出自带代码和输出代替。</p>
+<hr>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 切换为矢量图</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib_inline</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>matplotlib_inline.backend_inline.set_matplotlib_formats(<span class="st">"svg"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="零实验分析" class="level2">
+<h2 class="anchored" data-anchor-id="零实验分析">零、实验分析</h2>
+<p>本次实验的目标是纯 Python 实现一个感知机模型，并用它解决经典的鸢尾花分类问题。使用 <code>sklearn.datasets</code> 中的鸢尾花数据集，将其分为训练集和测试集，训练集用于训练感知机模型，测试集用于评估模型的性能。</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> load_iris</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>iris <span class="op">=</span> load_iris()</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># help(iris)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(iris.data.shape)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(iris.target.shape)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(iris.target)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(iris.target_names)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(iris.feature_names)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(150, 4)
+(150,)
+[0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+ 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2
+ 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+ 2 2]
+['setosa' 'versicolor' 'virginica']
+['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']</code></pre>
+</div>
+</div>
+<p>由输出可知，我们需要从 “sepal”（花萼）和 “petal”（花瓣）的两项测量值预测出一个 0..=2 的分类，首先我们对数据转成 Pandas 的 <code>DataFrame</code>，然后用 seaborn 绘制散点图，观察数据的分布情况。</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(iris.data, columns<span class="op">=</span>iris.feature_names)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'target'</span>] <span class="op">=</span> iris.target</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># df['target_name'] = df['target'].apply(lambda x: iris.target_names[x])</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">sepal length (cm)</th>
+<th data-quarto-table-cell-role="th">sepal width (cm)</th>
+<th data-quarto-table-cell-role="th">petal length (cm)</th>
+<th data-quarto-table-cell-role="th">petal width (cm)</th>
+<th data-quarto-table-cell-role="th">target</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>5.1</td>
+<td>3.5</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>4.9</td>
+<td>3.0</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>4.7</td>
+<td>3.2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4.6</td>
+<td>3.1</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5.0</td>
+<td>3.6</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">145</td>
+<td>6.7</td>
+<td>3.0</td>
+<td>5.2</td>
+<td>2.3</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">146</td>
+<td>6.3</td>
+<td>2.5</td>
+<td>5.0</td>
+<td>1.9</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">147</td>
+<td>6.5</td>
+<td>3.0</td>
+<td>5.2</td>
+<td>2.0</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">148</td>
+<td>6.2</td>
+<td>3.4</td>
+<td>5.4</td>
+<td>2.3</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">149</td>
+<td>5.9</td>
+<td>3.0</td>
+<td>5.1</td>
+<td>1.8</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+
+<p>150 rows × 5 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>sns.pairplot(df, hue<span class="op">=</span><span class="st">'target'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-pairplot" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="perceptron_files/figure-html/fig-pairplot-output-1.svg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: 配对图</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>可以看出，虽然 “versicolor” 和 “virginica” 之间有严重重叠，但是 “setosa” 和其他两个品种之间的分布还是比较明显的。尽管直方图显示，通过 petal 的其中一个特征即可区分 “setosa” 和 “virginica” 两个品种，本次还是老老实实选用两个特征：“petal length (cm)” 和 “petal width (cm)”</p>
+</section>
+<section id="一python-自编程实现感知机" class="level2">
+<h2 class="anchored" data-anchor-id="一python-自编程实现感知机">一、Python 自编程实现感知机</h2>
+<p>感知机模型定义不再赘述。</p>
+<p>首先，我们需要根据 “target” 列仅选出 “setosa” 和 “virginica” 两个品种的数据，然后将 “target” 列中的数字 0 和 2 分别替换为 -1 和 1。</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>training_targets <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">2</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> df[iris.feature_names[<span class="dv">2</span>:<span class="dv">4</span>]<span class="op">+</span>[<span class="st">'target'</span>]</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>          ][df[<span class="st">'target'</span>].isin(training_targets)]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>data[<span class="st">'target'</span>] <span class="op">=</span> data[<span class="st">'target'</span>].<span class="bu">apply</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> x: <span class="dv">1</span> <span class="cf">if</span> x <span class="op">==</span> training_targets[<span class="dv">0</span>] <span class="cf">else</span> <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">petal length (cm)</th>
+<th data-quarto-table-cell-role="th">petal width (cm)</th>
+<th data-quarto-table-cell-role="th">target</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1.3</td>
+<td>0.2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.5</td>
+<td>0.2</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1.4</td>
+<td>0.2</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">145</td>
+<td>5.2</td>
+<td>2.3</td>
+<td>-1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">146</td>
+<td>5.0</td>
+<td>1.9</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">147</td>
+<td>5.2</td>
+<td>2.0</td>
+<td>-1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">148</td>
+<td>5.4</td>
+<td>2.3</td>
+<td>-1</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">149</td>
+<td>5.1</td>
+<td>1.8</td>
+<td>-1</td>
+</tr>
+</tbody>
+</table>
+
+<p>100 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<p>接下来定义感知机类，各个方法的功能见注释。</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyPerceptron:</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, x_len: <span class="bu">int</span>, w_0: np.ndarray <span class="op">=</span> <span class="va">None</span>, b_0: <span class="bu">float</span> <span class="op">=</span> <span class="va">None</span>, l_rate: <span class="bu">float</span> <span class="op">=</span> <span class="va">None</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">        构造感知机</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">        :param x_len: 特征的向量长度</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">        :param w_0: w 的初始值，默认为零向量</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">        :param b_0: b 的初始值，默认为 0</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        w_0 <span class="op">=</span> np.ones(x_len, np.float32) <span class="cf">if</span> w_0 <span class="kw">is</span> <span class="va">None</span> <span class="cf">else</span> w_0</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        b_0 <span class="op">=</span> <span class="dv">0</span> <span class="cf">if</span> b_0 <span class="kw">is</span> <span class="va">None</span> <span class="cf">else</span> b_0</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.w <span class="op">=</span> w_0</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.b <span class="op">=</span> b_0</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.l_rate <span class="op">=</span> <span class="fl">0.01</span> <span class="cf">if</span> l_rate <span class="kw">is</span> <span class="va">None</span> <span class="cf">else</span> l_rate</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> infer(<span class="va">self</span>, x):</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">        进行单次推理</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">        a.k.a. 算出 $\sgn(x \dot w + b)$</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.sign(np.dot(x, <span class="va">self</span>.w) <span class="op">+</span> <span class="va">self</span>.b)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> fit(<span class="va">self</span>, train_df, validate_df: pd.DataFrame, max_iter<span class="op">=</span><span class="dv">100</span>) <span class="op">-&gt;</span> <span class="bu">tuple</span>[<span class="bu">int</span>, <span class="bu">float</span>, <span class="bu">float</span>]:</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co">        执行训练，直到能准确预测训练集或达到最大迭代数</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co">        :param data: 一个数据集，最后一列为推理结果</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="co">        :result: 迭代次数、训练准确率、验证准确率</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        train_size <span class="op">=</span> <span class="bu">len</span>(train_df)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        validate_size <span class="op">=</span> <span class="bu">len</span>(validate_df)</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        validate <span class="op">=</span> np.array(validate_df)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> iteration <span class="kw">in</span> <span class="bu">range</span>(max_iter):</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>            train <span class="op">=</span> np.array(train_df.sample(frac<span class="op">=</span><span class="dv">1</span>, random_state<span class="op">=</span>iteration))</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>            train_not_ok <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> line <span class="kw">in</span> train:</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>                x <span class="op">=</span> line[:<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>                y <span class="op">=</span> line[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>                ok <span class="op">=</span> <span class="va">self</span>.infer(x) <span class="op">*</span> y <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="kw">not</span> ok:</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>                    train_not_ok <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>                    <span class="co"># 根据学习率更新权重和截距</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>                    <span class="va">self</span>.w <span class="op">=</span> <span class="va">self</span>.w <span class="op">+</span> x <span class="op">*</span> y <span class="op">*</span> <span class="va">self</span>.l_rate</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>                    <span class="va">self</span>.b <span class="op">=</span> <span class="va">self</span>.b <span class="op">+</span> y <span class="op">*</span> <span class="va">self</span>.l_rate</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>            train_precision <span class="op">=</span> (train_size<span class="op">-</span>train_not_ok)<span class="op">/</span>train_size</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>                <span class="ss">f"[迭代 </span><span class="sc">{</span>iteration<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">] 训练 准确率=</span><span class="sc">{</span>train_precision<span class="op">*</span><span class="dv">100</span><span class="sc">}</span><span class="ss">% 样本数=</span><span class="sc">{</span>train_size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>            validate_not_ok <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> line <span class="kw">in</span> validate:</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>                x <span class="op">=</span> line[:<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>                y <span class="op">=</span> line[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>                ok <span class="op">=</span> <span class="va">self</span>.infer(x) <span class="op">*</span> y <span class="op">&gt;</span> <span class="dv">0</span> <span class="co"># 负负得正，正好可以判断结果是否符合</span></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="kw">not</span> ok:</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>                    validate_not_ok <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>            validate_precision <span class="op">=</span> (</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>                validate_size<span class="op">-</span>validate_not_ok)<span class="op">/</span>validate_size</span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(</span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>                <span class="ss">f"[迭代 </span><span class="sc">{</span>iteration<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">] 验证 准确率=</span><span class="sc">{</span>validate_precision<span class="op">*</span><span class="dv">100</span><span class="sc">}</span><span class="ss">% 样本数=</span><span class="sc">{</span>validate_size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> train_not_ok <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="ss">f"[迭代 </span><span class="sc">{</span>iteration<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">] 在训练集上全部正确，提前退出"</span>)</span>
+<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> iteration <span class="op">+</span> <span class="dv">1</span>, train_precision, validate_precision</span>
+<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> max_iter, train_precision, validate_precision</span>
+<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> MyPerceptron(<span class="bu">len</span>(data.columns)<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>train_df, validate_df <span class="op">=</span> np.split(data.sample(</span>
+<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>    frac<span class="op">=</span><span class="dv">1</span>, random_state<span class="op">=</span><span class="dv">1</span>), [<span class="bu">int</span>(<span class="fl">.7</span><span class="op">*</span><span class="bu">len</span>(data))])</span>
+<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>iter_count, train_precision, validate_precision <span class="op">=</span> model.fit(</span>
+<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>    train_df, validate_df)</span>
+<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"迭代次数=</span><span class="sc">{</span>iter_count<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"特征权重=</span><span class="sc">{</span>model<span class="sc">.</span>w<span class="sc">}</span><span class="ss">，截距（偏置）=</span><span class="sc">{</span>model<span class="sc">.</span>b<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"训练准确率=</span><span class="sc">{</span>train_precision<span class="sc">}</span><span class="ss">，验证准确率=</span><span class="sc">{</span>validate_precision<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[迭代 1] 训练 准确率=28.57142857142857% 样本数=70
+[迭代 1] 验证 准确率=43.333333333333336% 样本数=30
+[迭代 2] 训练 准确率=45.714285714285715% 样本数=70
+[迭代 2] 验证 准确率=50.0% 样本数=30
+[迭代 3] 训练 准确率=72.85714285714285% 样本数=70
+[迭代 3] 验证 准确率=96.66666666666667% 样本数=30
+[迭代 4] 训练 准确率=95.71428571428572% 样本数=70
+[迭代 4] 验证 准确率=83.33333333333334% 样本数=30
+[迭代 5] 训练 准确率=94.28571428571428% 样本数=70
+[迭代 5] 验证 准确率=96.66666666666667% 样本数=30
+[迭代 6] 训练 准确率=98.57142857142858% 样本数=70
+[迭代 6] 验证 准确率=100.0% 样本数=30
+[迭代 7] 训练 准确率=95.71428571428572% 样本数=70
+[迭代 7] 验证 准确率=100.0% 样本数=30
+[迭代 8] 训练 准确率=98.57142857142858% 样本数=70
+[迭代 8] 验证 准确率=100.0% 样本数=30
+[迭代 9] 训练 准确率=100.0% 样本数=70
+[迭代 9] 验证 准确率=100.0% 样本数=30
+[迭代 9] 在训练集上全部正确，提前退出
+迭代次数=9
+特征权重=[-0.196  0.262]，截距（偏置）=0.3300000000000001
+训练准确率=1.0，验证准确率=1.0</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>train_df_np <span class="op">=</span> np.array(train_df)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>validate_df_np <span class="op">=</span> np.array(validate_df)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>train_pos <span class="op">=</span> train_df_np[:, <span class="dv">2</span>] <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>train_neg <span class="op">=</span> train_df_np[:, <span class="dv">2</span>] <span class="op">&lt;</span> <span class="dv">0</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>validate_pos <span class="op">=</span> validate_df_np[:, <span class="dv">2</span>] <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>validate_neg <span class="op">=</span> validate_df_np[:, <span class="dv">2</span>] <span class="op">&lt;</span> <span class="dv">0</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>plt.scatter(train_df_np[train_pos, <span class="dv">0</span>],</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>            train_df_np[train_pos, <span class="dv">1</span>], label<span class="op">=</span><span class="st">"train+"</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>plt.scatter(train_df_np[train_neg, <span class="dv">0</span>],</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>            train_df_np[train_neg, <span class="dv">1</span>], label<span class="op">=</span><span class="st">"train-"</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>plt.scatter(validate_df_np[validate_pos, <span class="dv">0</span>],</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>            validate_df_np[validate_pos, <span class="dv">1</span>], label<span class="op">=</span><span class="st">"test+"</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>plt.scatter(validate_df_np[validate_neg, <span class="dv">0</span>],</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>            validate_df_np[validate_neg, <span class="dv">1</span>], label<span class="op">=</span><span class="st">"test-"</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 在分类线上找到合适尺寸的段</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>x_min <span class="op">=</span> data[data.columns[<span class="dv">0</span>]].<span class="bu">min</span>()</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>x_max <span class="op">=</span> data[data.columns[<span class="dv">0</span>]].<span class="bu">max</span>()</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>y_min <span class="op">=</span> data[data.columns[<span class="dv">1</span>]].<span class="bu">min</span>()</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>y_max <span class="op">=</span> data[data.columns[<span class="dv">1</span>]].<span class="bu">max</span>()</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>x_split <span class="op">=</span> np.array([x_min, x_max])</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>y_split <span class="op">=</span> <span class="op">\</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="op">-</span>(model.w[<span class="dv">0</span>] <span class="op">*</span> x_split <span class="op">+</span> model.b) <span class="op">/</span> <span class="op">\</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    model.w[<span class="dv">1</span>]  <span class="co"># 落在 x*w[0] + y*w[1] + b = 0 上的点</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> y_split[<span class="dv">0</span>] <span class="op">&lt;</span> y_min <span class="kw">or</span> y_split[<span class="dv">1</span>] <span class="op">&gt;</span> y_max:</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    y_split <span class="op">=</span> np.array([y_min, y_max])</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    x_split <span class="op">=</span> <span class="op">\</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span>(model.w[<span class="dv">1</span>] <span class="op">*</span> y_split <span class="op">+</span> model.b) <span class="op">/</span> <span class="op">\</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>        model.w[<span class="dv">0</span>]  <span class="co"># 落在 x*w[0] + y*w[1] + b = 0 上的点</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>plt.title(MyPerceptron.__module__ <span class="op">+</span> <span class="st">"."</span> <span class="op">+</span> MyPerceptron.<span class="va">__name__</span>)</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>plt.plot(x_split, y_split, label<span class="op">=</span><span class="st">"classification"</span>)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-myperceptron" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="perceptron_files/figure-html/fig-myperceptron-output-1.svg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: 自编程实现效果图</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="二sklearn-实现感知机" class="level2">
+<h2 class="anchored" data-anchor-id="二sklearn-实现感知机">二、<code>sklearn</code> 实现感知机</h2>
+<p>重用上面划分的 <code>data</code> 前，要先将其转换为 <code>numpy</code> 数组。</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Perceptron</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>data_np <span class="op">=</span> np.array(data)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>feature, label <span class="op">=</span> data_np[:, :<span class="op">-</span><span class="dv">1</span>], data_np[:, <span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>feature_train, feature_test, label_train, label_test <span class="op">=</span> train_test_split(</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    feature, label, test_size<span class="op">=</span><span class="fl">0.3</span>, random_state<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>注意到实验指导书中错误的禁用了 <code>fit_intercept</code> 参数，使模型误认为数据已经被中心化，从而导致模型训练失败。</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>clf <span class="op">=</span> Perceptron(fit_intercept<span class="op">=</span><span class="va">True</span>, max_iter<span class="op">=</span><span class="dv">1000</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>clf.fit(feature_train, label_train)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"迭代次数=</span><span class="sc">{</span>clf<span class="sc">.</span>n_iter_<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"特征权重=</span><span class="sc">{</span>clf<span class="sc">.</span>coef_<span class="sc">}</span><span class="ss">，截距（偏置）=</span><span class="sc">{</span>clf<span class="sc">.</span>intercept_<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"训练准确率=</span><span class="sc">{</span>clf<span class="sc">.</span>score(feature_train, label_train)<span class="sc">}</span><span class="ss">，验证准确率=</span><span class="sc">{</span>clf<span class="sc">.</span>score(feature_test, label_test)<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>迭代次数=7
+特征权重=[[-0.7 -1. ]]，截距（偏置）=[3.]
+训练准确率=1.0，验证准确率=1.0</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>feature_train_pos <span class="op">=</span> label_train <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>feature_train_neg <span class="op">=</span> label_train <span class="op">&lt;</span> <span class="dv">0</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>feature_test_pos <span class="op">=</span> label_test <span class="op">&gt;</span> <span class="dv">0</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>feature_test_neg <span class="op">=</span> label_test <span class="op">&lt;</span> <span class="dv">0</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>plt.scatter(feature_train[feature_train_pos, <span class="dv">0</span>],</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>            feature_train[feature_train_pos, <span class="dv">1</span>], label<span class="op">=</span><span class="st">"train+"</span>)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>plt.scatter(feature_train[feature_train_neg, <span class="dv">0</span>],</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>            feature_train[feature_train_neg, <span class="dv">1</span>], label<span class="op">=</span><span class="st">"train-"</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>plt.scatter(feature_test[feature_test_pos, <span class="dv">0</span>],</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>            feature_test[feature_test_pos, <span class="dv">1</span>], label<span class="op">=</span><span class="st">"test+"</span>)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>plt.scatter(feature_test[feature_test_neg, <span class="dv">0</span>],</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>            feature_test[feature_test_neg, <span class="dv">1</span>], label<span class="op">=</span><span class="st">"test-"</span>)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>x_split <span class="op">=</span> np.array([x_min, x_max])</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>y_split <span class="op">=</span> <span class="op">\</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">-</span>(clf.coef_[<span class="dv">0</span>, <span class="dv">0</span>] <span class="op">*</span> x_split <span class="op">+</span> clf.intercept_[<span class="dv">0</span>]) <span class="op">/</span> <span class="op">\</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    clf.coef_[<span class="dv">0</span>, <span class="dv">1</span>]  <span class="co"># 落在 x*w[0] + y*w[1] + b = 0 上的点</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> y_split[<span class="dv">0</span>] <span class="op">&lt;</span> y_min <span class="kw">or</span> y_split[<span class="dv">1</span>] <span class="op">&gt;</span> y_max:</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    y_split <span class="op">=</span> np.array([y_min, y_max])</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    x_split <span class="op">=</span> <span class="op">\</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span>(clf.coef_[<span class="dv">0</span>, <span class="dv">1</span>] <span class="op">*</span> y_split <span class="op">+</span> clf.intercept_[<span class="dv">0</span>]) <span class="op">/</span> <span class="op">\</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        clf.coef_[<span class="dv">0</span>, <span class="dv">0</span>]  <span class="co"># 落在 x*w[0] + y*w[1] + b = 0 上的点</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>plt.title(Perceptron.__module__ <span class="op">+</span> <span class="st">"."</span> <span class="op">+</span> Perceptron.<span class="va">__name__</span>)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>plt.plot(x_split, y_split, label<span class="op">=</span><span class="st">"classification"</span>)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div id="fig-scikit-perceptron" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="perceptron_files/figure-html/fig-scikit-perceptron-output-1.svg" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Figure&nbsp;3: sklearn 实现效果图</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="三思考题" class="level2">
+<h2 class="anchored" data-anchor-id="三思考题">三、思考题</h2>
+<ol type="1">
+<li><blockquote class="blockquote">
+<p>在做数据处理时，为什么要转化为 DataFrame 格式来处理，不能直接用 NumPy 吗？</p>
+</blockquote>
+<p>DataFrame 不同单元格可以有不同的数据类型，还可以保留列名等信息，而 <code>numpy.ndarray</code> 只能存储同一类型的数据，且没有列名等信息，但是运算速度（与 Pandas 相比）快得多。</p></li>
+<li><blockquote class="blockquote">
+<p>怎样挑选合适的特征来做分类，理由是什么？</p>
+</blockquote>
+<p>在选出的特征中，不同类别的数据尽可能分布开来，而同一类别的数据尽可能聚集在一起，同时特征之间的相关性尽可能低。</p></li>
+<li><blockquote class="blockquote">
+<p>为什么要使用随机种子做数据分割？</p>
+</blockquote>
+<p>因为数据的分类可能与顺序有关。本次的鸢尾花数据集是一个非常极端的例子：数据都是按照三个品种顺序排列的，如果不打乱数据，那么训练集或测试集中可能只会有一种品种的数据。</p></li>
+<li><blockquote class="blockquote">
+<p>使用 sklearn 库来编码，学习率对迭代过程和最终结果有无影响？若有/无影响的话，条件是什么？</p>
+</blockquote>
+<p>在最大迭代数和收敛阈值满足的情况下，学习率对最终结果没有影响。如果最大迭代数过小或收敛阈值过低，过小的学习率可能导致模型无法收敛；如果最大迭代数过大或收敛阈值过高，过大的学习率可能导致模型收敛过快，无法达到最优解。</p></li>
+<li><blockquote class="blockquote">
+<p>本次实验能对 “versicolor” 和 “virginica” 两种鸢尾花做分类吗？能的话，实现出来；不能的话，说明理由。</p>
+</blockquote>
+<p>参考上面的 <a href="#fig-pairplot">Figure&nbsp;1</a>，完美地分类 “versicolor” 和 “virginica” 是不可能的，因为它们在所有特征上都有有部分重叠。经过试验，使用 “petal length (cm)” 和 “petal width (cm)” 两个特征，仅能达到 85% 左右的准确率。</p></li>
+</ol>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

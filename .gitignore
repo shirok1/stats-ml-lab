@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+venv
+
+*_files
+*.tex
+*.pdf
+*.zip
+!**/*资料/*.pdf
+
+.ipynb_checkpoints
